@@ -30,7 +30,27 @@ public extension TestSubscriber {
 
     @discardableResult
     func assertNoValues() throws -> Self {
-        guard values.count == 0 else { throw throwException("Some values were published") }
+        try assertValueCount(0)
+        return self
+    }
+    
+    @discardableResult
+    func assertValues(_ values: Input..., using comparator: (Input, Input) -> Bool) throws -> Self {
+        try assertValueCount(values.count)
+        try zip(values, self.values).enumerated().forEach { index, values in
+            let (expected, actual) = values
+            if !comparator(expected, actual) {
+                throw throwException("Value at position \(index) differ; Expected: \(expected), Actual: \(actual)")
+            }
+        }
+        return self
+    }
+
+    @discardableResult
+    func assertValueCount(_ count: Int) throws -> Self {
+        guard values.count == count else {
+            throw throwException("Value count differs; Expected: \(count), Actual: \(self.values.count)")
+        }
         return self
     }
 }

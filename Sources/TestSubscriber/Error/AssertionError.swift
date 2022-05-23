@@ -15,3 +15,10 @@ public struct AssertionError: Error, Equatable {
         self.message = message
     }
 }
+
+extension AssertionError: CustomStringConvertible {
+
+    public var description: String {
+        return message
+    }
+}
