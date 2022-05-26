@@ -10,7 +10,7 @@ import Foundation
 public final class TestSubscriber<Input, Failure> where Failure: Error {
 
     internal var values: [Input] = []
-    internal var errors: [Failure] = []
+    internal var error: Failure?
     internal var completed: Bool = false
 
     private let demand: Subscribers.Demand
@@ -39,7 +39,7 @@ extension TestSubscriber: Subscriber {
         case .finished:
             completed = true
         case .failure(let error):
-            errors.append(error)
+            self.error = error
         }
     }
 }
@@ -50,7 +50,7 @@ extension TestSubscriber {
         let resultMessage = """
         \(message), \
         values: \(values), \
-        errors: \(errors), \
+        error: \(String(describing: error)), \
         completed: \(completed)
         """
         return AssertionError(resultMessage)
