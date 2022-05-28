@@ -9,9 +9,9 @@ import Foundation
 
 public final class TestSubscriber<Input, Failure> where Failure: Error {
 
-    internal var values: [Input] = []
-    internal var error: Failure?
-    internal var completed: Bool = false
+    var values: [Input] = []
+    var error: Failure?
+    var finished: Bool = false
 
     private let demand: Subscribers.Demand
 
@@ -31,13 +31,13 @@ extension TestSubscriber: Subscriber {
 
     public func receive(_ input: Input) -> Subscribers.Demand {
         values.append(input)
-        return .unlimited
+        return demand
     }
 
     public func receive(completion: Subscribers.Completion<Failure>) {
         switch completion {
         case .finished:
-            completed = true
+            finished = true
         case .failure(let error):
             self.error = error
         }
@@ -51,7 +51,7 @@ extension TestSubscriber {
         \(message), \
         values: \(values), \
         error: \(String(describing: error)), \
-        completed: \(completed)
+        finished: \(finished)
         """
         return AssertionError(resultMessage)
     }
