@@ -16,6 +16,11 @@ public extension TestSubscriber where Input: Equatable {
         }
         return self
     }
+    
+    @discardableResult
+    func assertValues(_ values: Input...) throws -> Self {
+        return try assertValues(values)
+    }
 
     @discardableResult
     func assertValue(_ value: Input) throws -> Self {
@@ -35,7 +40,7 @@ public extension TestSubscriber {
     }
     
     @discardableResult
-    func assertValues(_ values: Input..., using comparator: (Input, Input) -> Bool) throws -> Self {
+    func assertValues(_ values: [Input], using comparator: (Input, Input) -> Bool) throws -> Self {
         try assertValueCount(values.count)
         try zip(values, self.values).enumerated().forEach { index, values in
             let (expected, actual) = values
@@ -44,6 +49,11 @@ public extension TestSubscriber {
             }
         }
         return self
+    }
+
+    @discardableResult
+    func assertValues(_ values: Input..., using comparator: (Input, Input) -> Bool) throws -> Self {
+        return try assertValues(values, using: comparator)
     }
 
     @discardableResult
