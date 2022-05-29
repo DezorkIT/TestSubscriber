@@ -12,6 +12,7 @@ public final class TestSubscriber<Input, Failure> where Failure: Error {
     var values: [Input] = []
     var error: Failure?
     var finished: Bool = false
+    var subscriptions = Set<AnyCancellable>()
 
     private let demand: Subscribers.Demand
 
@@ -27,6 +28,7 @@ extension TestSubscriber: Subscriber {
 
     public func receive(subscription: Subscription) {
         subscription.request(demand)
+        subscription.store(in: &subscriptions)
     }
 
     public func receive(_ input: Input) -> Subscribers.Demand {
