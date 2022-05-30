@@ -29,6 +29,16 @@ public extension TestSubscriber where Input: Equatable {
         }
         return self
     }
+
+    @discardableResult
+    func assertValues(_ values: Input..., at positions: Int...) throws -> Self {
+        return try assertValues(values, at: positions, using: ==)
+    }
+
+    @discardableResult
+    func assertValues(_ values: [Input], at positions: [Int]) throws -> Self {
+        return try assertValues(values, at: positions, using: ==)
+    }
 }
 
 public extension TestSubscriber {
@@ -63,4 +73,27 @@ public extension TestSubscriber {
         }
         return self
     }
+    
+    @discardableResult
+    func assertValues(_ values: Input..., at positions: Int...,using comparator: (Input, Input) -> Bool) throws -> Self {
+        return try assertValues(values, at: positions, using: comparator)
+    }
+
+    @discardableResult
+    func assertValues(_ values: [Input], at positions: [Int], using comparator: (Input, Input) -> Bool) throws -> Self {
+        guard values.count == positions.count else { throw throwException("Values and positions should be equal size") }
+        try zip(values, positions).forEach { try assertValue($0.0, at: $0.1, using: comparator) }
+        return self
+    }
+
+    @discardableResult
+    func assertValue(_ value: Input, at position: Int, using comparator: (Input, Input) -> Bool) throws -> Self {
+        guard position > .zero else { throw throwException("Position should be greater than 0") }
+        guard position < values.endIndex else {
+            throw throwException("Position: \(position) is greater than last index \(values.endIndex - 1)")
+        }
+        guard comparator(values[position], value)  else { throw throwException("There is no value of \(value) at position \(position)") }
+        return self
+    }
+
 }
