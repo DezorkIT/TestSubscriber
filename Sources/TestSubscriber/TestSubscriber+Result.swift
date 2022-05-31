@@ -16,10 +16,7 @@ public extension TestSubscriber where Input: Equatable {
     
     @discardableResult
     func assertResult(with values: [Input]) throws -> Self {
-        try assertValues(values)
-            .assertNoError()
-            .assertFinished()
-        return self
+        return try assertResult(with: values, using: ==)
     }
 }
 
@@ -27,9 +24,7 @@ public extension TestSubscriber where Failure: Equatable {
 
     @discardableResult
     func assertResult(with error: Failure) throws -> Self {
-        try assertError(error)
-            .assertNoValues()
-        return self
+        return try assertResult(with: error, using: ==)
     }
 }
 
@@ -67,6 +62,14 @@ public extension TestSubscriber {
     
     @discardableResult
     func assertEmptyResult() throws -> Self {
+        try assertNoValues()
+            .assertNoError()
+            .assertFinished()
+        return self
+    }
+    
+    @discardableResult
+    func assertNoIntrecationsResult() throws -> Self {
         try assertNoValues()
             .assertNoError()
             .assertNotFinished()

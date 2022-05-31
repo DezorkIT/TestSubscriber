@@ -88,7 +88,7 @@ public extension TestSubscriber {
 
     @discardableResult
     func assertValue(_ value: Input, at position: Int, using comparator: (Input, Input) -> Bool) throws -> Self {
-        guard position > .zero else { throw throwException("Position should be greater than 0") }
+        guard position >= .zero else { throw throwException("Position should be greater than 0") }
         guard position < values.endIndex else {
             throw throwException("Position: \(position) is greater than last index \(values.endIndex - 1)")
         }
