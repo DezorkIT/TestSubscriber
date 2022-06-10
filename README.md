@@ -59,7 +59,6 @@ or call unsubscribe method declared in TestSubscriber
 
 You can find more examples in [test directory](https://github.com/DezorkIT/TestSubscriber/tree/main/Tests/TestSubscriberTests)
 
-You can add CombineSchedulers to an Xcode project by adding it as a package dependency.
 # Installation
 
 1. Select File menu > Add Packages...
