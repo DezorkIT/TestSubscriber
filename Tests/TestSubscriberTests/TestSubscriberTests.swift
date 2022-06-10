@@ -22,6 +22,19 @@ final class TestSubscriberTests: XCTestCase {
             .assertValues(1,2)
             .assertFinished()
     }
+
+    func testValuesWithSubjectAndDemand() throws {
+        let subject = PassthroughSubject<Int, TestError>()
+        let subscriber = TestSubscriber<Int, TestError>(demand: .max(1))
+        subject.subscribe(subscriber)
+        subject.send(1)
+        subject.send(2)
+        subject.send(completion: .finished)
+        
+        try subscriber
+            .assertValues(1)
+            .assertFinished()
+    }
     
     func testValuesAtPositionWithSubject() throws {
         let subject = PassthroughSubject<Int, TestError>()

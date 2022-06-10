@@ -33,7 +33,7 @@ extension TestSubscriber: Subscriber {
 
     public func receive(_ input: Input) -> Subscribers.Demand {
         values.append(input)
-        return demand
+        return .none
     }
 
     public func receive(completion: Subscribers.Completion<Failure>) {
